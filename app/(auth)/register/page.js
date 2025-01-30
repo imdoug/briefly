@@ -1,22 +1,26 @@
 'use client'
 import { auth } from '../../../utils/firebase';
 import { useForm } from "react-hook-form";
-import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { useAuth } from "@/context/context";
+
 
 const Register = () => {
     const router = useRouter()
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
       } = useForm()
+
+      const { setCurrUser } = useAuth()
 
     const onSubmit = async (data) => {
         try {
             const userCredential = await auth.createUserWithEmailAndPassword(data.email, data.password);
             const user = userCredential.user;
+            setCurrUser(user.uid)
+
             // Do something with the newly created user
             router.push("/")
             //console.log(user.uid)

@@ -2,6 +2,8 @@
 import { useForm } from "react-hook-form";
 import { auth } from '../../../utils/firebase';
 import { useRouter } from 'next/navigation';
+import { useAuth } from "@/context/context";
+
 const Login = () => {
     const {
         register,
@@ -11,12 +13,14 @@ const Login = () => {
       } = useForm()
 
       const router = useRouter()
+      const { setCurrUser } = useAuth()
 
     const onSubmit = async(data) => {
       try {
         const userCredential = await auth.signInWithEmailAndPassword(data.email, data.password);
         //console.log(userCredential.user.uid)
         // Redirect to a protected page or update user state
+        setCurrUser(userCredential.user.uid)
         router.push("/")
       } catch (error) {
         console.error(error);
